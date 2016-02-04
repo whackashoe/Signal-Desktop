@@ -158,15 +158,17 @@ MessageSender.prototype = {
         proto.body = "TERMINATE";
         proto.flags = textsecure.protobuf.DataMessage.Flags.END_SESSION;
         return this.sendIndividualProto(number, proto, timestamp).then(function(res) {
-            return textsecure.storage.devices.getDeviceObjectsForNumber(number).then(function(devices) {
-                return Promise.all(devices.map(function(device) {
-                    console.log('closing session for', device.encodedNumber);
-                    return textsecure.protocol_wrapper.closeOpenSessionForDevice(device.encodedNumber);
-                })).then(function() {
-                    return res;
+            return this.sendSyncMessage(proto.toArrayBuffer(), timestamp, number).then(function() {
+                return textsecure.storage.devices.getDeviceObjectsForNumber(number).then(function(devices) {
+                    return Promise.all(devices.map(function(device) {
+                        console.log('closing session for', device.encodedNumber);
+                        return textsecure.protocol_wrapper.closeOpenSessionForDevice(device.encodedNumber);
+                    })).then(function() {
+                        return res;
+                    });
                 });
             });
-        });
+        }.bind(this));
     },
 
     sendMessageToGroup: function(groupId, messageText, attachments, timestamp) {
