@@ -328,5 +328,13 @@
     "unblockToSend": {
       "message": "Unblock this contact to send a message.",
       "description": "Brief message shown when trying to message a blocked number"
+    },
+    "safetyNumbersSettingHeader": {
+      "message": "Safety numbers approval",
+      "description": "Description for safety numbers setting"
+    },
+    "safetyNumbersSettingDescription": {
+      "message": "Require approval of new safety numbers when they change.",
+      "description": "Description for safety numbers setting"
     }
 }

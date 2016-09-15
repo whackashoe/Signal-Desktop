@@ -5,10 +5,12 @@
 
 // Components
   @import 'progress';
+  @import 'modal';
   @import 'debugLog';
   @import 'lightbox';
   @import 'recorder';
   @import 'emoji';
+  @import 'settings';
 
 // Build the main view
   @import 'index';
