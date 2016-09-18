@@ -41,6 +41,26 @@
         this.on('change:avatar', this.updateAvatarUrl);
         this.on('destroy', this.revokeAvatarUrl);
         this.on('read', this.countUnread);
+
+        this.fetchContacts().then(function() {
+            this.contactCollection.each(function(contact) {
+                textsecure.storage.protocol.on('keychange:' + contact.id, function() {
+                    this.addKeyChange(contact.id);
+                }.bind(this));
+            }.bind(this));
+        }.bind(this));
+    },
+
+    addKeyChange: function(id) {
+        var now = Date.now();
+        var message = this.messageCollection.add({
+            conversationId : this.id,
+            type           : 'keychange',
+            sent_at        : now,
+            received_at    : now,
+            key_changed    : id
+        });
+        message.save();
     },
 
     countUnread: function() {

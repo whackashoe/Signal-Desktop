@@ -109,7 +109,8 @@
             'loadMore .message-list': 'fetchMessages',
             'close .menu': 'closeMenu',
             'select .message-list .entry': 'messageDetail',
-            'force-resize': 'forceUpdateMessageFieldSize'
+            'force-resize': 'forceUpdateMessageFieldSize',
+            'verify-identity': 'verifyIdentity'
         },
         toggleMicrophone: function() {
             if (this.$('.send-message').val().length > 0 || this.fileInput.hasFiles()) {
@@ -194,10 +195,13 @@
             this.model.markRead();
         },
 
-        verifyIdentity: function() {
-            if (this.model.isPrivate()) {
+        verifyIdentity: function(ev, model) {
+            if (!model && this.model.isPrivate()) {
+                model = this.model;
+            }
+            if (model) {
                 var view = new Whisper.KeyVerificationPanelView({
-                    model: { their_number: this.model.id }
+                    model: { their_number: model.id }
                 });
                 this.listenBack(view);
             }
