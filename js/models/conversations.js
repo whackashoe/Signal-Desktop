@@ -41,6 +41,8 @@
         this.on('change:avatar', this.updateAvatarUrl);
         this.on('destroy', this.revokeAvatarUrl);
         this.on('read', this.onReadMessage);
+        this.listenTo(this.messageCollection, 'add remove',
+          _.debounce(this.updateLastMessage.bind(this), 1000));
     },
 
     onReadMessage: function(message) {
@@ -165,6 +167,18 @@
             }
             message.send(sendFunc(this.get('id'), body, attachments, now, this.get('expireTimer')));
         }.bind(this));
+    },
+
+    updateLastMessage: function() {
+        var lastMessage = this.messageCollection.at(this.messageCollection.length - 1);
+        if (lastMessage) {
+          this.save({
+            lastMessage : lastMessage.getNotificationText(),
+            timestamp   : lastMessage.get('sent_at')
+          });
+        } else {
+          this.save({ lastMessage: '', timestamp: null });
+        }
     },
 
     addExpirationTimerUpdate: function(time, source) {
