@@ -195,6 +195,9 @@
               source         : source
             }
         });
+        if (this.isPrivate()) {
+            message.set({destination: this.id});
+        }
         message.save();
         return message;
     },
