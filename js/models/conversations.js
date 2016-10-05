@@ -41,8 +41,6 @@
         this.on('change:avatar', this.updateAvatarUrl);
         this.on('destroy', this.revokeAvatarUrl);
         this.on('read', this.onReadMessage);
-        this.listenTo(this.messageCollection, 'add remove',
-          _.debounce(this.updateLastMessage.bind(this), 1000));
     },
 
     onReadMessage: function(message) {
